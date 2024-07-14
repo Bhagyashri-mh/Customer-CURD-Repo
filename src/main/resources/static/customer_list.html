@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer List</title>
+    <link rel="stylesheet" type="text/css" href="@{/styles.css}">
+</head>
+<body>
+    <h1>Customer List</h1>
+    <button onclick="syncCustomers()">Sync</button>
+    <a href="/customers/add"><button type="submit">Add Customer</button></a>
+    <table id="customerTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="customer : ${customers}">
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.firstName}"></td>
+                <td th:text="${customer.lastName}"></td>
+                <td th:text="${customer.address}"></td>
+                <td th:text="${customer.city}"></td>
+                <td th:text="${customer.state}"></td>
+                <td th:text="${customer.email}"></td>
+                <td th:text="${customer.phone}"></td>
+                <td>
+                    <a th:href="@{/customers/edit/{id}(id=${customer.id})}">Edit</a>
+                    <a th:href="@{/customers/delete/{id}(id=${customer.id})}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function syncCustomers() {
+            fetch('https://qa.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "login_id": "test@sunbasedata.com",
+                    "password": "Test@123"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle remote customer data here
+                console.log(data); // Just log the response for now
+            })
+            .catch(err => console.error('Error syncing customers:', err));
+        }
+    </script>
+</body>
+</html>
